@@ -138,5 +138,15 @@ public static boolean checkPasswordComplexity(String password) {
 public static boolean checkCellPhoneNumber(String phoneNumber) {
     return phoneNumber != null && phoneNumber.matches("\\+27[0-9]{9}");
 }
+public static boolean loginUser(String userName, String password, String registeredUsername, String registeredPassword) {
+    return userName != null && password != null&& userName.equals(registeredUsername)&& password.equals(registeredPassword);
+    }
 
+    public static String loginStatus( String firstName,String lastName,String userName,
+        String password,String registeredUsername, String registeredPassword) {
+        if (loginUser(userName,password,registeredUsername, registeredPassword)) {
+            return "Welcome " + firstName + "," + lastName+", it is great to see you again.";
+        }
+        return "Username or password incorrect.";
+    }
 }
