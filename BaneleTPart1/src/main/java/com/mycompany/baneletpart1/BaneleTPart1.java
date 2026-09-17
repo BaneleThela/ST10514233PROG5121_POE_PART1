@@ -134,4 +134,9 @@ public static boolean checkPasswordComplexity(String password) {
     }
     return hasCapitalLetter && hasNumber && hasSpecialCharacter;
 }
+
+public static boolean checkCellPhoneNumber(String phoneNumber) {
+    return phoneNumber != null && phoneNumber.matches("\\+27[0-9]{9}");
+}
+
 }
