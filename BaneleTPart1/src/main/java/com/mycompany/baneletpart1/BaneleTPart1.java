@@ -100,5 +100,13 @@ public static String registerUser( String firstName,String lastName, String phon
         }
         return "Registration was unsuccessful.";
 }
-
+public static boolean checkFirstName(String firstName) {
+    return firstName != null && !firstName.trim().isEmpty();
+}
+public static boolean checkLastName(String lastName) {
+    return lastName != null && !lastName.trim().isEmpty();
+}
+public static boolean checkUserName(String userName) {
+    return userName != null && userName.contains("_")&& userName.length() <= 5;
+}
 }
