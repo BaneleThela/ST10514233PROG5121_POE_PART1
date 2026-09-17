@@ -109,4 +109,29 @@ public static boolean checkLastName(String lastName) {
 public static boolean checkUserName(String userName) {
     return userName != null && userName.contains("_")&& userName.length() <= 5;
 }
+
+public static boolean checkPasswordComplexity(String password) {
+    if (password == null || password.length() < 8) {
+    return false;
+    }
+    boolean hasCapitalLetter = false;
+    boolean hasSpecialCharacter = false;
+    boolean hasNumber = false;
+    int index = 0;
+    
+    // While loop checks every character in the password
+    while (index < password.length()) {
+    char current = password.charAt(index);
+    
+    if (Character.isUpperCase(current)) {
+    hasCapitalLetter = true;
+    } else if (Character.isDigit(current)) {
+    hasNumber = true;
+    } else if (!Character.isLetterOrDigit(current)) {
+    hasSpecialCharacter = true;
+    }
+    index++;
+    }
+    return hasCapitalLetter && hasNumber && hasSpecialCharacter;
+}
 }
