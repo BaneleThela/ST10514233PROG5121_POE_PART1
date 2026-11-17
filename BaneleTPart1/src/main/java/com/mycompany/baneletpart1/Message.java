@@ -110,7 +110,7 @@ public class Message {
     public void DisplayMesage()
     {
         System.out.println("Message ID: "+this.messageID+"\nMessage Hash: "+this.messageHash+
-                "\nRecipient: "+this.recipientCell+"\nMessage: "+this.message);
+                "\nRecipient: "+this.recipientCell+"\nNumber of Messages Sent: "+this.numMesageSent+"\nMessage: "+this.message);
     }
     
      public String createMessageHash(String messageID, int numMessageSent, String mesasage)

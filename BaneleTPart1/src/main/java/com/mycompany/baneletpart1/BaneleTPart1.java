@@ -121,6 +121,7 @@ public static void main(String[] args) {
                     System.out.print("Enter the recipient's number: ");
                     String recipient = myInput.nextLine().trim();
                     Message checker = new Message(messageID, messagesEntered, recipient, "check");
+                    
                     while (!Login.checkCellPhoneNumber(recipient)) {
                         System.out.println(checker.checkRecipientCell(recipient));
                         System.out.print("Enter the recipient's number again: ");
@@ -141,7 +142,7 @@ public static void main(String[] args) {
                         messageText = myInput.nextLine();
                     }
                     System.out.println(checker.checkMessageLength(messageText));
-
+                    messagesEntered++;
                     Message currentMessage = new Message(messageID, messagesEntered, recipient, messageText);
                     System.out.println(currentMessage.messageIDCreated());
 
@@ -173,7 +174,7 @@ public static void main(String[] args) {
                         currentMessage.StoreMessages(storedList);
                     }
 
-                    messagesEntered++;
+                   
 
                     // Show the total once all the messages have been entered
                     if (messagesEntered == totalToSend) {
