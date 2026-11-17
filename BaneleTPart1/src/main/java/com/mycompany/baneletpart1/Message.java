@@ -21,16 +21,19 @@ public class Message {
     private int numMesageSent;
     private String recipientCell;
     private String message;
+    private String messageSender;
     private String messageHash;
     private String messageStatus;
     //Constructor
     public Message(String messageID,
             int numMesageSent,
+            String messageSender,
             String recipient,
             String message)
     {
         this.messageID = messageID;
         this.numMesageSent = numMesageSent;
+        this.messageSender = messageSender;
         this.recipientCell = recipient;
         this.message = message;
         this.messageHash = createMessageHash(messageID, numMesageSent, message);
@@ -62,6 +65,12 @@ public class Message {
         return this.messageStatus;
     }
       
+        public String getMessageSender()
+    {
+        return this.messageSender;
+    }
+      
+      
     //Mutator methods changes this cchangeslass's proparties ouside from other classes
       public void setNumMesageSent(int num)
       {
@@ -84,6 +93,11 @@ public class Message {
       {
           this.messageStatus = messageStatus;
       }
+         public void setMessageSender(String messageSender)
+      {
+          this.messageSender = messageSender;
+      }
+        
         
         //Message methods
     public boolean checkMessageID(String messageID)
@@ -110,7 +124,8 @@ public class Message {
     public void DisplayMesage()
     {
         System.out.println("Message ID: "+this.messageID+"\nMessage Hash: "+this.messageHash+
-                "\nRecipient: "+this.recipientCell+"\nNumber of Messages Sent: "+this.numMesageSent+"\nMessage: "+this.message);
+                "\nRecipient: "+this.recipientCell+"\nMesaage Sender: "+this.messageSender+
+                "\nNumber of Messages Sent: "+this.numMesageSent+"\nMessage: "+this.message+"\nMessage Status: "+this.messageStatus);
     }
     
      public String createMessageHash(String messageID, int numMessageSent, String mesasage)

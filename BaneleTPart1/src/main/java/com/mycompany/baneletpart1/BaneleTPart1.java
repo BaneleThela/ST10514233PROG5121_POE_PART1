@@ -120,7 +120,7 @@ public static void main(String[] args) {
                     // Keep asking until a valid recipient number is entered
                     System.out.print("Enter the recipient's number: ");
                     String recipient = myInput.nextLine().trim();
-                    Message checker = new Message(messageID, messagesEntered, recipient, "check");
+                    Message checker = new Message(messageID, messagesEntered, firstName,recipient, "check");
                     
                     while (!Login.checkCellPhoneNumber(recipient)) {
                         System.out.println(checker.checkRecipientCell(recipient));
@@ -143,7 +143,7 @@ public static void main(String[] args) {
                     }
                     System.out.println(checker.checkMessageLength(messageText));
                     messagesEntered++;
-                    Message currentMessage = new Message(messageID, messagesEntered, recipient, messageText);
+                    Message currentMessage = new Message(messageID, messagesEntered,firstName, recipient, messageText);
                     System.out.println(currentMessage.messageIDCreated());
 
                     // Keep asking until a valid choice is entered
@@ -152,7 +152,7 @@ public static void main(String[] args) {
                     System.out.println("3. Store Message");
                     System.out.print("What do you want to do with this message? ");
                     int action = readNumber(myInput);
-                    while (action < 1 || action > 3) {
+                    while (action < 1 || action > 4) {
                         System.out.println(currentMessage.SentMessage(action));
                         System.out.print("What do you want to do with this message? ");
                         action = readNumber(myInput);
@@ -160,9 +160,11 @@ public static void main(String[] args) {
                     System.out.println(currentMessage.SentMessage(action));
 
                     if (action == 1) {
+                        currentMessage.setMessageStatus("Sent");
                         sentList.add(currentMessage);
                         currentMessage.DisplayMesage();
                     } else if (action == 2) {
+                         currentMessage.setMessageStatus("Disregard");
                         String deleteKey = myInput.nextLine().trim();
                         while (!deleteKey.equals("0")) {
                             System.out.println("Press 0 to delete the message.");
@@ -170,6 +172,7 @@ public static void main(String[] args) {
                         }
                         System.out.println("Message deleted.");
                     } else {
+                         currentMessage.setMessageStatus("Stored");
                         storedList.add(currentMessage);
                         currentMessage.StoreMessages(storedList);
                     }
