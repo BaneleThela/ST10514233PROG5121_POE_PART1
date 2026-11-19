@@ -105,7 +105,6 @@ public class BaneleTPart1 {
 
         // QUICKCHAT (Part 2) - only reached once the user has logged in
         System.out.println();
-
         System.out.println("WELCOME TO QUICKCHAT");
 
         int totalToSend = 0;
@@ -232,7 +231,6 @@ public class BaneleTPart1 {
                         // Show the total once all the messages have been entered
                         if (messagesEntered == totalToSend) {
                             System.out.println();
-
                             System.out.println("MESSAGE LIMIT REACHED");
                             System.out.println("Total number of messages sent: " + currentMessage.returnTotalMessages(sentList));
                         }
@@ -240,19 +238,20 @@ public class BaneleTPart1 {
                 }
 
             } else if (menuOption == 2) {
-                System.out.println();
-               displaySentMessages(sentList);
+                displaySentMessages(sentList);
 
             } else if (menuOption == 3) {
-                System.out.println();
+                searchMenu(sentList, myInput);
 
+            } else if (menuOption == 4) {
+                System.out.println();
                 System.out.println("Total number of messages sent: " + sentList.size());
                 System.out.println("Goodbye.");
                 quit = true;
 
             } else {
                 System.out.println();
-                System.out.println("Invalid option. Choose 1, 2 or 3.");
+                System.out.println("Invalid option. Choose 1, 2, 3 or 4.");
             }
         }
 
@@ -265,7 +264,8 @@ public class BaneleTPart1 {
         System.out.println("--------------- QUICKCHAT MENU -------------");
         System.out.println("1) Send Messages");
         System.out.println("2) Show recently sent messages");
-        System.out.println("3) Quit");
+        System.out.println("3) Search Messages");
+        System.out.println("4) Quit");
         System.out.println("----------------------------------------------");
         System.out.print("Choose an option: ");
 
@@ -283,8 +283,7 @@ public class BaneleTPart1 {
 
         return Integer.parseInt(line);
     }
-    
-    
+
     // Part 3 - Display all recently sent messages
     public static void displaySentMessages(ArrayList<Message> sentMessages) {
 
@@ -307,4 +306,98 @@ public class BaneleTPart1 {
         System.out.println("--------------------------------------------");
     }
 
+    // Part 3 - Search for a message using its ID
+    public static void searchMessageID(ArrayList<Message> sentMessages, Scanner myInput) {
+
+        System.out.println();
+        System.out.println("---------- SEARCH MESSAGE ID ----------");
+        System.out.print("Enter the Message ID: ");
+        String searchID = myInput.nextLine().trim();
+
+        boolean found = false;
+
+        for (int i = 0; i < sentMessages.size(); i++) {
+
+            Message currentMessage = sentMessages.get(i);
+            ArrayList<Message> oneMessage = new ArrayList<>();
+            oneMessage.add(currentMessage);
+
+            String details = currentMessage.printMessages(oneMessage);
+
+            if (details.contains("Message ID: " + searchID + "\n")) {
+                System.out.println();
+                System.out.println("Message found:");
+                currentMessage.DisplayMesage();
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No message found with that ID.");
+        }
+    }
+
+    // Part 3 - Search for messages using the recipient number
+    public static void searchRecipient(ArrayList<Message> sentMessages, Scanner myInput) {
+
+        System.out.println();
+        System.out.println("---------- SEARCH RECIPIENT ----------");
+        System.out.print("Enter the recipient's cellphone number: ");
+        String searchNumber = myInput.nextLine().trim();
+
+        boolean found = false;
+
+        for (int i = 0; i < sentMessages.size(); i++) {
+
+            Message currentMessage = sentMessages.get(i);
+            ArrayList<Message> oneMessage = new ArrayList<>();
+            oneMessage.add(currentMessage);
+
+            String details = currentMessage.printMessages(oneMessage);
+
+            if (details.contains("Recipient: " + searchNumber + "\n")) {
+                System.out.println();
+                System.out.println("Matching message:");
+                currentMessage.DisplayMesage();
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No messages found for this recipient.");
+        }
+    }
+
+    // Part 3 - Search menu
+    public static void searchMenu(ArrayList<Message> sentMessages, Scanner myInput) {
+
+        int searchOption = 0;
+
+        while (searchOption != 3) {
+
+            System.out.println();
+            System.out.println("---------- SEARCH MESSAGES ----------");
+            System.out.println("1) Search by Message ID");
+            System.out.println("2) Search by Recipient");
+            System.out.println("3) Return to Main Menu");
+            System.out.println("-------------------------------------");
+            System.out.print("Choose an option: ");
+
+            searchOption = readNumber(myInput);
+
+            if (searchOption == 1) {
+                searchMessageID(sentMessages, myInput);
+
+            } else if (searchOption == 2) {
+                searchRecipient(sentMessages, myInput);
+
+            } else if (searchOption == 3) {
+                System.out.println("Returning to main menu.");
+
+            } else {
+                System.out.println("Invalid option. Choose 1, 2 or 3.");
+            }
+        }
+    }
 }
