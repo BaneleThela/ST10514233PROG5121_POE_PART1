@@ -1,10 +1,15 @@
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package com.mycompany.baneletpart1;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -18,21 +23,12 @@ public class BaneleTPart1 {
 
         Scanner myInput = new Scanner(System.in);
 
-        String firstName;
-        String lastName;
-        String phoneNumber;
-        String registerUserName;
-        String registerPassword;
-        String userName;
-        String password;
-
         System.out.println();
         System.out.println(" REGISTRATION ");
         System.out.println();
 
-        // Keep asking until a valid first name is entered
         System.out.print("Enter your first name: ");
-        firstName = myInput.nextLine().trim();
+        String firstName = myInput.nextLine().trim();
 
         while (!Login.checkFirstName(firstName)) {
             System.out.println("First name is incorrect.");
@@ -40,9 +36,8 @@ public class BaneleTPart1 {
             firstName = myInput.nextLine().trim();
         }
 
-        // Keep asking until a valid last name is entered
         System.out.print("Enter your last name: ");
-        lastName = myInput.nextLine().trim();
+        String lastName = myInput.nextLine().trim();
 
         while (!Login.checkLastName(lastName)) {
             System.out.println("Last name is incorrect.");
@@ -50,9 +45,8 @@ public class BaneleTPart1 {
             lastName = myInput.nextLine().trim();
         }
 
-        // Keep asking until a valid phone number is entered
         System.out.print("Enter your phone number: ");
-        phoneNumber = myInput.nextLine().trim();
+        String phoneNumber = myInput.nextLine().trim();
 
         while (!Login.checkCellPhoneNumber(phoneNumber)) {
             System.out.println("Cell phone number incorrectly formatted or does not contain the international code.");
@@ -60,9 +54,8 @@ public class BaneleTPart1 {
             phoneNumber = myInput.nextLine().trim();
         }
 
-        // Keep asking until a valid username is entered
         System.out.print("Enter your username: ");
-        registerUserName = myInput.nextLine().trim();
+        String registerUserName = myInput.nextLine().trim();
 
         while (!Login.checkUserName(registerUserName)) {
             System.out.println("Username is not correctly formatted. Ensure that it contains an underscore and is no more than 5 characters.");
@@ -70,19 +63,18 @@ public class BaneleTPart1 {
             registerUserName = myInput.nextLine().trim();
         }
 
-        // Keep asking until a valid password is entered
         System.out.print("Enter your password: ");
-        registerPassword = myInput.nextLine();
+        String registerPassword = myInput.nextLine();
 
         while (!Login.checkPasswordComplexity(registerPassword)) {
-            System.out.println("Password is not correctly formatted. Ensure that it contains "
-                    + "at least 8 characters, a capital letter, a number, and a special character.");
+            System.out.println("Password is not correctly formatted. Ensure that it contains at least 8 characters, a capital letter, a number, and a special character.");
             System.out.print("Enter your password again: ");
             registerPassword = myInput.nextLine();
         }
 
         System.out.println();
-        System.out.println(Login.registerUser(firstName, lastName, phoneNumber,
+        System.out.println(Login.registerUser(
+                firstName, lastName, phoneNumber,
                 registerUserName, registerPassword));
 
         System.out.println();
@@ -91,21 +83,23 @@ public class BaneleTPart1 {
 
         boolean loggedIn = false;
 
-        // Repeat the login process until the details are correct
         while (!loggedIn) {
 
             System.out.print("Enter your username: ");
-            userName = myInput.nextLine().trim();
+            String userName = myInput.nextLine().trim();
 
             System.out.print("Enter your password: ");
-            password = myInput.nextLine();
+            String password = myInput.nextLine();
 
-            loggedIn = Login.loginUser(userName, password,
+            loggedIn = Login.loginUser(
+                    userName, password,
                     registerUserName, registerPassword);
 
             System.out.println();
-            System.out.println(Login.loginStatus(firstName, lastName,
-                    userName, password, registerUserName, registerPassword));
+            System.out.println(Login.loginStatus(
+                    firstName, lastName,
+                    userName, password,
+                    registerUserName, registerPassword));
 
             if (!loggedIn) {
                 System.out.println("Please try again.");
@@ -113,26 +107,33 @@ public class BaneleTPart1 {
             }
         }
 
-        // QUICKCHAT
         System.out.println();
         System.out.println("WELCOME TO QUICKCHAT");
 
+        // Part 3 required collections
+        ArrayList<Message> sentMessages = new ArrayList<>();
+        ArrayList<Message> disregardedMessages = new ArrayList<>();
+        ArrayList<Message> storedMessages = loadStoredMessages();
+
+        ArrayList<String> messageHashes = new ArrayList<>();
+        ArrayList<String> messageIDs = new ArrayList<>();
+
+        // Include IDs and hashes of previously stored messages
+        for (Message savedMessage : storedMessages) {
+            messageHashes.add(savedMessage.getMessageHash());
+            messageIDs.add(savedMessage.getMessageID());
+        }
+
         int totalToSend = 0;
-
-        ArrayList<Message> sentList = new ArrayList<>();
-        ArrayList<Message> storedList = new ArrayList<>();
-
         int messagesEntered = 0;
         boolean quit = false;
 
-        // Keep showing the menu until the user chooses Quit
         while (!quit) {
 
             int menuOption = showMenu(myInput);
 
             if (menuOption == 1) {
 
-                // Ask how many messages to send when Option 1 is selected
                 if (totalToSend == 0) {
 
                     System.out.println();
@@ -145,7 +146,7 @@ public class BaneleTPart1 {
                     }
                 }
 
-                if (messagesEntered == totalToSend) {
+                if (messagesEntered >= totalToSend) {
 
                     System.out.println();
                     System.out.println("You have reached your limit of "
@@ -153,34 +154,43 @@ public class BaneleTPart1 {
 
                 } else {
 
-                    // Continue creating messages until the limit is reached
                     while (messagesEntered < totalToSend) {
 
                         System.out.println();
-                        System.out.println("MESSAGE " + (messagesEntered + 1)
+                        System.out.println("MESSAGE "
+                                + (messagesEntered + 1)
                                 + " OF " + totalToSend);
                         System.out.println();
 
                         String messageID = Message.generateMessageID();
 
-                        // Keep asking until a valid recipient number is entered
+                        // Avoid duplicate message IDs
+                        while (messageIDs.contains(messageID)) {
+                            messageID = Message.generateMessageID();
+                        }
+
                         System.out.print("Enter the recipient's number: ");
                         String recipient = myInput.nextLine().trim();
 
-                        Message checker = new Message(messageID,
-                                messagesEntered, firstName, recipient, "check");
+                        Message checker = new Message(
+                                messageID, messagesEntered,
+                                firstName, recipient, "check");
 
                         while (!Login.checkCellPhoneNumber(recipient)) {
 
-                            System.out.println(checker.checkRecipientCell(recipient));
-                            System.out.print("Enter the recipient's number again: ");
+                            System.out.println(
+                                    checker.checkRecipientCell(recipient));
+
+                            System.out.print(
+                                    "Enter the recipient's number again: ");
+
                             recipient = myInput.nextLine().trim();
                         }
 
-                        System.out.println(checker.checkRecipientCell(recipient));
+                        System.out.println(
+                                checker.checkRecipientCell(recipient));
                         System.out.println();
 
-                        // Validate the message text
                         System.out.print("Enter your message: ");
                         String messageText = myInput.nextLine();
 
@@ -190,22 +200,32 @@ public class BaneleTPart1 {
                             if (messageText.trim().isEmpty()) {
                                 System.out.println("Message cannot be empty.");
                             } else {
-                                System.out.println(checker.checkMessageLength(messageText));
+                                System.out.println(
+                                        checker.checkMessageLength(messageText));
                             }
 
                             System.out.print("Enter your message again: ");
                             messageText = myInput.nextLine();
                         }
 
-                        System.out.println(checker.checkMessageLength(messageText));
+                        System.out.println(
+                                checker.checkMessageLength(messageText));
 
                         messagesEntered++;
 
-                        Message currentMessage = new Message(messageID,
-                                messagesEntered, firstName, recipient, messageText);
+                        Message currentMessage = new Message(
+                                messageID,
+                                messagesEntered,
+                                firstName,
+                                recipient,
+                                messageText);
+
+                        messageIDs.add(currentMessage.getMessageID());
+                        messageHashes.add(currentMessage.getMessageHash());
 
                         System.out.println();
-                        System.out.println(currentMessage.messageIDCreated());
+                        System.out.println(
+                                currentMessage.messageIDCreated());
 
                         System.out.println();
                         System.out.println("---------- MESSAGE OPTIONS ----------");
@@ -213,14 +233,19 @@ public class BaneleTPart1 {
                         System.out.println("2. Disregard Message");
                         System.out.println("3. Store Message");
                         System.out.println("-------------------------------------");
-                        System.out.print("What do you want to do with this message? ");
+                        System.out.print(
+                                "What do you want to do with this message? ");
 
                         int action = readNumber(myInput);
 
                         while (action < 1 || action > 3) {
 
-                            System.out.println(currentMessage.SentMessage(action));
-                            System.out.print("What do you want to do with this message? ");
+                            System.out.println(
+                                    currentMessage.SentMessage(action));
+
+                            System.out.print(
+                                    "What do you want to do with this message? ");
+
                             action = readNumber(myInput);
                         }
 
@@ -230,54 +255,70 @@ public class BaneleTPart1 {
                         if (action == 1) {
 
                             currentMessage.setMessageStatus("Sent");
-                            sentList.add(currentMessage);
+                            sentMessages.add(currentMessage);
                             currentMessage.DisplayMesage();
 
                         } else if (action == 2) {
 
                             currentMessage.setMessageStatus("Disregard");
+                            disregardedMessages.add(currentMessage);
 
-                            System.out.print("Press 0 to delete the message: ");
+                            System.out.print(
+                                    "Press 0 to disregard the message: ");
+
                             String deleteKey = myInput.nextLine().trim();
 
                             while (!deleteKey.equals("0")) {
 
-                                System.out.print("Press 0 to delete the message: ");
+                                System.out.print(
+                                        "Press 0 to disregard the message: ");
+
                                 deleteKey = myInput.nextLine().trim();
                             }
 
-                            System.out.println("Message deleted.");
+                            System.out.println("Message disregarded.");
 
                         } else {
 
                             currentMessage.setMessageStatus("Stored");
-                            storedList.add(currentMessage);
-                            currentMessage.StoreMessages(storedList);
+                            storedMessages.add(currentMessage);
+
+                            currentMessage.StoreMessages(storedMessages);
                         }
 
                         if (messagesEntered == totalToSend) {
 
                             System.out.println();
                             System.out.println("MESSAGE LIMIT REACHED");
-                            System.out.println("Total number of messages sent: "
-                                    + currentMessage.returnTotalMessages(sentList));
+                            System.out.println(
+                                    "Total number of messages sent: "
+                                    + sentMessages.size());
                         }
                     }
                 }
 
             } else if (menuOption == 2) {
 
-                displaySentMessages(sentList);
+                displaySentMessages(sentMessages);
 
             } else if (menuOption == 3) {
 
-                messageManagementMenu(sentList, storedList, myInput);
+                // Refresh stored messages from JSON
+                storedMessages = loadStoredMessages();
+
+                messageManagementMenu(
+                        sentMessages,
+                        storedMessages,
+                        disregardedMessages,
+                        messageHashes,
+                        messageIDs,
+                        myInput);
 
             } else if (menuOption == 4) {
 
                 System.out.println();
                 System.out.println("Total number of messages sent: "
-                        + sentList.size());
+                        + sentMessages.size());
                 System.out.println("Goodbye.");
 
                 quit = true;
@@ -285,29 +326,30 @@ public class BaneleTPart1 {
             } else {
 
                 System.out.println();
-                System.out.println("Invalid option. Choose 1, 2, 3 or 4.");
+                System.out.println(
+                        "Invalid option. Choose 1, 2, 3 or 4.");
             }
         }
 
         myInput.close();
     }
 
-    // Shows the QuickChat menu
+    // MAIN MENU
     public static int showMenu(Scanner myInput) {
 
         System.out.println();
         System.out.println("--------------- QUICKCHAT MENU -------------");
         System.out.println("1) Send Messages");
         System.out.println("2) Show Recently Sent Messages");
-        System.out.println("3) Part 3 - Message Management");
+        System.out.println("3) Stored Messages - Part 3");
         System.out.println("4) Quit");
-        System.out.println("----------------------------------------------");
+        System.out.println("--------------------------------------------");
         System.out.print("Choose an option: ");
 
         return readNumber(myInput);
     }
 
-    // Reads a whole number
+    // NUMBER VALIDATION
     public static int readNumber(Scanner myInput) {
 
         String line = myInput.nextLine().trim();
@@ -321,8 +363,9 @@ public class BaneleTPart1 {
         return Integer.parseInt(line);
     }
 
-    // Display recently sent messages
-    public static void displaySentMessages(ArrayList<Message> sentMessages) {
+    // DISPLAY SENT MESSAGES
+    public static void displaySentMessages(
+            ArrayList<Message> sentMessages) {
 
         System.out.println();
         System.out.println("---------- RECENTLY SENT MESSAGES ----------");
@@ -346,10 +389,13 @@ public class BaneleTPart1 {
         System.out.println("--------------------------------------------");
     }
 
-    // PART 3 - All features in one menu
+    // PART 3 - ONE COMBINED MENU
     public static void messageManagementMenu(
             ArrayList<Message> sentMessages,
             ArrayList<Message> storedMessages,
+            ArrayList<Message> disregardedMessages,
+            ArrayList<String> messageHashes,
+            ArrayList<String> messageIDs,
             Scanner myInput) {
 
         int option = 0;
@@ -357,15 +403,15 @@ public class BaneleTPart1 {
         while (option != 7) {
 
             System.out.println();
-            System.out.println("--------------- MESSAGE MANAGEMENT -------------");
-            System.out.println("1) Display Sender and Recipient of Sent Messages");
-            System.out.println("2) Display the Longest Sent Message");
-            System.out.println("3) Search for a Message by Message ID");
-            System.out.println("4) Search for Messages by Recipient");
-            System.out.println("5) Delete a Message by Message Hash");
-            System.out.println("6) Display Sent Messages Report");
+            System.out.println("--------------- STORED MESSAGES ---------------");
+            System.out.println("1) Display Sender and Recipient");
+            System.out.println("2) Display the Longest Stored Message");
+            System.out.println("3) Search Message by ID");
+            System.out.println("4) Search Messages by Recipient");
+            System.out.println("5) Delete Message by Hash");
+            System.out.println("6) Display Message Report");
             System.out.println("7) Return to Main Menu");
-            System.out.println("------------------------------------------------");
+            System.out.println("-----------------------------------------------");
             System.out.print("Choose an option: ");
 
             option = readNumber(myInput);
@@ -373,27 +419,33 @@ public class BaneleTPart1 {
             switch (option) {
 
                 case 1:
-                    displaySenderRecipient(sentMessages);
+                    displaySenderRecipient(storedMessages);
                     break;
 
                 case 2:
-                    displayLongestMessage(sentMessages);
+                    displayLongestMessage(storedMessages);
                     break;
 
                 case 3:
-                    searchMessageID(sentMessages, myInput);
+                    searchMessageID(
+                            sentMessages, storedMessages, myInput);
                     break;
 
                 case 4:
-                    searchRecipient(sentMessages, myInput);
+                    searchRecipient(
+                            sentMessages, storedMessages, myInput);
                     break;
 
                 case 5:
-                    deleteMessageByHash(sentMessages, myInput);
+                    deleteMessageByHash(
+                            storedMessages,
+                            messageHashes,
+                            messageIDs,
+                            myInput);
                     break;
 
                 case 6:
-                    displayMessageReport(sentMessages, "SENT MESSAGES REPORT");
+                    displayMessageReport(storedMessages);
                     break;
 
                 case 7:
@@ -406,81 +458,74 @@ public class BaneleTPart1 {
         }
     }
 
-    // Part 3 A - Display sender and recipient of sent messages
-    public static void displaySenderRecipient(ArrayList<Message> sentMessages) {
+    // PART 3 A - DISPLAY SENDER AND RECIPIENT
+    public static void displaySenderRecipient(
+            ArrayList<Message> storedMessages) {
 
         System.out.println();
         System.out.println("---------- SENDER AND RECIPIENT ----------");
 
-        if (sentMessages.isEmpty()) {
+        if (storedMessages.isEmpty()) {
 
-            System.out.println("No sent messages available.");
+            System.out.println("No stored messages available.");
 
         } else {
 
-            for (int i = 0; i < sentMessages.size(); i++) {
+            for (int i = 0; i < storedMessages.size(); i++) {
 
-                Message currentMessage = sentMessages.get(i);
-
-                String details = getMessageDetails(currentMessage);
+                Message currentMessage = storedMessages.get(i);
 
                 System.out.println();
                 System.out.println("MESSAGE " + (i + 1));
-
                 System.out.println("Sender: "
-                        + getDetail(details, "Sender:"));
-
+                        + currentMessage.getMessageSender());
                 System.out.println("Recipient: "
-                        + getDetail(details, "Recipient:"));
+                        + currentMessage.getRecipient());
             }
         }
 
         System.out.println("------------------------------------------");
     }
 
-    // Part 3 B - Display the longest sent message
-    public static void displayLongestMessage(ArrayList<Message> sentMessages) {
+    // PART 3 B - DISPLAY LONGEST STORED MESSAGE
+    public static void displayLongestMessage(
+            ArrayList<Message> storedMessages) {
 
         System.out.println();
-        System.out.println("---------- LONGEST SENT MESSAGE ----------");
+        System.out.println("---------- LONGEST STORED MESSAGE ----------");
 
-        if (sentMessages.isEmpty()) {
+        if (storedMessages.isEmpty()) {
 
-            System.out.println("No sent messages available.");
-
-        } else {
-
-            Message longestMessage = sentMessages.get(0);
-
-            String longestText = getDetail(
-                    getMessageDetails(longestMessage), "Message:");
-
-            for (int i = 1; i < sentMessages.size(); i++) {
-
-                Message currentMessage = sentMessages.get(i);
-
-                String currentText = getDetail(
-                        getMessageDetails(currentMessage), "Message:");
-
-                if (currentText.length() > longestText.length()) {
-
-                    longestMessage = currentMessage;
-                    longestText = currentText;
-                }
-            }
-
-            System.out.println();
-            System.out.println("Longest message:");
-            System.out.println(longestText);
-            System.out.println();
-            System.out.println("Number of characters: " + longestText.length());
+            System.out.println("No stored messages available.");
+            return;
         }
+
+        Message longestMessage = storedMessages.get(0);
+
+        for (Message currentMessage : storedMessages) {
+
+            if (currentMessage.getMessage().length()
+                    > longestMessage.getMessage().length()) {
+
+                longestMessage = currentMessage;
+            }
+        }
+
+        System.out.println();
+        System.out.println("Longest message:");
+        System.out.println(longestMessage.getMessage());
+
+        System.out.println();
+        System.out.println("Number of characters: "
+                + longestMessage.getMessage().length());
 
         System.out.println("------------------------------------------");
     }
 
-    // Part 3 C - Search for a message using its ID
-    public static void searchMessageID(ArrayList<Message> sentMessages,
+    // PART 3 C - SEARCH MESSAGE BY ID
+    public static void searchMessageID(
+            ArrayList<Message> sentMessages,
+            ArrayList<Message> storedMessages,
             Scanner myInput) {
 
         System.out.println();
@@ -488,21 +533,23 @@ public class BaneleTPart1 {
         System.out.print("Enter the Message ID: ");
 
         String searchID = myInput.nextLine().trim();
+
+        ArrayList<Message> allMessages = new ArrayList<>();
+        allMessages.addAll(sentMessages);
+        allMessages.addAll(storedMessages);
+
         boolean found = false;
 
-        for (int i = 0; i < sentMessages.size(); i++) {
+        for (Message currentMessage : allMessages) {
 
-            Message currentMessage = sentMessages.get(i);
-
-            String details = getMessageDetails(currentMessage);
-
-            String currentID = getDetail(details, "Message ID:");
-
-            if (currentID.equals(searchID)) {
+            if (currentMessage.getMessageID().equals(searchID)) {
 
                 System.out.println();
                 System.out.println("Message found:");
-                currentMessage.DisplayMesage();
+                System.out.println("Recipient: "
+                        + currentMessage.getRecipient());
+                System.out.println("Message: "
+                        + currentMessage.getMessage());
 
                 found = true;
                 break;
@@ -514,8 +561,10 @@ public class BaneleTPart1 {
         }
     }
 
-    // Part 3 D - Search for messages using the recipient number
-    public static void searchRecipient(ArrayList<Message> sentMessages,
+    // PART 3 D - SEARCH BY RECIPIENT
+    public static void searchRecipient(
+            ArrayList<Message> sentMessages,
+            ArrayList<Message> storedMessages,
             Scanner myInput) {
 
         System.out.println();
@@ -523,21 +572,23 @@ public class BaneleTPart1 {
         System.out.print("Enter the recipient's cellphone number: ");
 
         String searchNumber = myInput.nextLine().trim();
+
+        ArrayList<Message> allMessages = new ArrayList<>();
+        allMessages.addAll(sentMessages);
+        allMessages.addAll(storedMessages);
+
         boolean found = false;
 
-        for (int i = 0; i < sentMessages.size(); i++) {
+        for (Message currentMessage : allMessages) {
 
-            Message currentMessage = sentMessages.get(i);
-
-            String details = getMessageDetails(currentMessage);
-
-            String currentRecipient = getDetail(details, "Recipient:");
-
-            if (currentRecipient.equals(searchNumber)) {
+            if (currentMessage.getRecipient().equals(searchNumber)) {
 
                 System.out.println();
                 System.out.println("Matching message:");
-                currentMessage.DisplayMesage();
+                System.out.println("Recipient: "
+                        + currentMessage.getRecipient());
+                System.out.println("Message: "
+                        + currentMessage.getMessage());
 
                 found = true;
             }
@@ -548,16 +599,19 @@ public class BaneleTPart1 {
         }
     }
 
-    // Part 3 E - Delete a sent message using its hash
-    public static void deleteMessageByHash(ArrayList<Message> sentMessages,
+    // PART 3 E - DELETE MESSAGE USING HASH
+    public static void deleteMessageByHash(
+            ArrayList<Message> storedMessages,
+            ArrayList<String> messageHashes,
+            ArrayList<String> messageIDs,
             Scanner myInput) {
 
         System.out.println();
         System.out.println("---------- DELETE MESSAGE ----------");
 
-        if (sentMessages.isEmpty()) {
+        if (storedMessages.isEmpty()) {
 
-            System.out.println("There are no sent messages to delete.");
+            System.out.println("There are no stored messages to delete.");
             return;
         }
 
@@ -566,15 +620,12 @@ public class BaneleTPart1 {
 
         boolean found = false;
 
-        for (int i = 0; i < sentMessages.size(); i++) {
+        for (int i = 0; i < storedMessages.size(); i++) {
 
-            Message currentMessage = sentMessages.get(i);
+            Message currentMessage = storedMessages.get(i);
 
-            String details = getMessageDetails(currentMessage);
-
-            String currentHash = getDetail(details, "Message Hash:");
-
-            if (currentHash.equalsIgnoreCase(searchHash)) {
+            if (currentMessage.getMessageHash()
+                    .equalsIgnoreCase(searchHash)) {
 
                 System.out.println();
                 System.out.println("Message found:");
@@ -587,7 +638,16 @@ public class BaneleTPart1 {
 
                 if (confirmation.equals("0")) {
 
-                    sentMessages.remove(i);
+                    storedMessages.remove(i);
+
+                    messageHashes.remove(
+                            currentMessage.getMessageHash());
+
+                    messageIDs.remove(
+                            currentMessage.getMessageID());
+
+                    // Save the updated collection to JSON
+                    currentMessage.StoreMessages(storedMessages);
 
                     System.out.println();
                     System.out.println("Message successfully deleted.");
@@ -603,63 +663,89 @@ public class BaneleTPart1 {
         }
 
         if (!found) {
-
             System.out.println("No message found with that hash.");
         }
     }
 
-    // Part 3 F - Display a report of sent messages
-    public static void displayMessageReport(ArrayList<Message> messages,
-            String reportTitle) {
+    // PART 3 F - DISPLAY STORED MESSAGES REPORT
+    public static void displayMessageReport(
+            ArrayList<Message> storedMessages) {
 
         System.out.println();
-        System.out.println("---------- " + reportTitle + " ----------");
+        System.out.println("---------- STORED MESSAGES REPORT ----------");
 
-        if (messages.isEmpty()) {
+        if (storedMessages.isEmpty()) {
 
-            System.out.println("No messages available.");
+            System.out.println("No stored messages available.");
 
         } else {
 
-            for (int i = 0; i < messages.size(); i++) {
+            for (int i = 0; i < storedMessages.size(); i++) {
+
+                Message currentMessage = storedMessages.get(i);
 
                 System.out.println();
                 System.out.println("MESSAGE " + (i + 1));
                 System.out.println();
 
-                System.out.println(getMessageDetails(messages.get(i)));
+                System.out.println("Message ID: "
+                        + currentMessage.getMessageID());
+
+                System.out.println("Message Hash: "
+                        + currentMessage.getMessageHash());
+
+                System.out.println("Sender: "
+                        + currentMessage.getMessageSender());
+
+                System.out.println("Recipient: "
+                        + currentMessage.getRecipient());
+
+                System.out.println("Message: "
+                        + currentMessage.getMessage());
+
+                System.out.println("Message Status: "
+                        + currentMessage.getMessageStatus());
             }
         }
 
         System.out.println();
-        System.out.println("Total messages: " + messages.size());
+        System.out.println("Total stored messages: "
+                + storedMessages.size());
+
         System.out.println("--------------------------------------------");
     }
 
-    // Get the details of one message using the existing Message class
-    public static String getMessageDetails(Message currentMessage) {
+    // READ STORED MESSAGES FROM JSON
+    public static ArrayList<Message> loadStoredMessages() {
 
-        ArrayList<Message> oneMessage = new ArrayList<>();
-        oneMessage.add(currentMessage);
+        ArrayList<Message> storedMessages = new ArrayList<>();
 
-        return currentMessage.printMessages(oneMessage);
-    }
+        File file = new File("message.json");
 
-    // Read a specific field from the message details
-    public static String getDetail(String details, String fieldName) {
-
-        String[] lines = details.split("\\R");
-
-        for (String line : lines) {
-
-            String trimmedLine = line.trim();
-
-            if (trimmedLine.startsWith(fieldName)) {
-
-                return trimmedLine.substring(fieldName.length()).trim();
-            }
+        if (!file.exists()) {
+            return storedMessages;
         }
 
-        return "";
+        Gson gson = new Gson();
+
+        Type messageListType = new TypeToken<ArrayList<Message>>() {
+        }.getType();
+
+        try (FileReader reader = new FileReader(file)) {
+
+            ArrayList<Message> loadedMessages =
+                    gson.fromJson(reader, messageListType);
+
+            if (loadedMessages != null) {
+                storedMessages.addAll(loadedMessages);
+            }
+
+        } catch (IOException | com.google.gson.JsonParseException e) {
+
+            System.out.println("Error loading stored messages: "
+                    + e.getMessage());
+        }
+
+        return storedMessages;
     }
 }

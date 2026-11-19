@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="MessageTest" time="0.187" tests="14" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="MessageTest" time="0.129" tests="14" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,9 +15,8 @@
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-25.0.2\bin"/>
-    <property name="sun.java.command" value="C:\Users\Student\AppData\Local\Temp\surefire1421331200389506473\surefirebooter-20261119144326577_3.jar C:\Users\Student\AppData\Local\Temp\surefire1421331200389506473 2026-11-19T14-43-26_336-jvmRun1 surefire-20261119144326577_1tmp surefire_0-20261119144326577_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Student\AppData\Local\Temp\surefire4931923232459806525\surefirebooter-20261119160856068_3.jar C:\Users\Student\AppData\Local\Temp\surefire4931923232459806525 2026-11-19T16-08-55_784-jvmRun1 surefire-20261119160856068_1tmp surefire_0-20261119160856068_2tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="test" value="MessageTest"/>
     <property name="surefire.test.class.path" value="C:\Users\Student\Documents\GitHub\ST10514233PROG5121_POE_PART1\BaneleTPart1\target\test-classes;C:\Users\Student\Documents\GitHub\ST10514233PROG5121_POE_PART1\BaneleTPart1\target\classes;C:\Users\Student\.m2\repository\com\google\code\gson\gson\2.13.2\gson-2.13.2.jar;C:\Users\Student\.m2\repository\com\google\errorprone\error_prone_annotations\2.41.0\error_prone_annotations-2.41.0.jar;C:\Users\Student\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.3\junit-jupiter-api-5.10.3.jar;C:\Users\Student\.m2\repository\org\junit\platform\junit-platform-commons\1.10.3\junit-platform-commons-1.10.3.jar;C:\Users\Student\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Student\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.3\junit-jupiter-params-5.10.3.jar;C:\Users\Student\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.3\junit-jupiter-engine-5.10.3.jar;C:\Users\Student\.m2\repository\org\junit\platform\junit-platform-engine\1.10.3\junit-platform-engine-1.10.3.jar;C:\Users\Student\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\Student"/>
@@ -31,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Student\AppData\Local\Temp\surefire1421331200389506473\surefirebooter-20261119144326577_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Student\AppData\Local\Temp\surefire4931923232459806525\surefirebooter-20261119160856068_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="25.0.2+10-LTS-69"/>
@@ -61,18 +60,18 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="checkReturnTotalMessages" classname="MessageTest" time="0.055"/>
-  <testcase name="checkMessageLengthSuccess" classname="MessageTest" time="0.004"/>
-  <testcase name="checkMessageIDIsValid" classname="MessageTest" time="0.006"/>
-  <testcase name="checkMessageLengthFailure" classname="MessageTest" time="0.003"/>
+  <testcase name="checkReturnTotalMessages" classname="MessageTest" time="0.018"/>
+  <testcase name="checkMessageLengthSuccess" classname="MessageTest" time="0.006"/>
+  <testcase name="checkMessageIDIsValid" classname="MessageTest" time="0.005"/>
+  <testcase name="checkMessageLengthFailure" classname="MessageTest" time="0.009"/>
   <testcase name="checkRecipientCellSuccess" classname="MessageTest" time="0.007"/>
   <testcase name="checkStoreMessage" classname="MessageTest" time="0.003"/>
   <testcase name="checkSendMessage" classname="MessageTest" time="0.003"/>
-  <testcase name="checkMessageIDTooLong" classname="MessageTest" time="0.004"/>
-  <testcase name="checkRecipientCellFailure" classname="MessageTest" time="0.002"/>
-  <testcase name="checkDisregardMessage" classname="MessageTest" time="0.002"/>
-  <testcase name="checkPrintMessages" classname="MessageTest" time="0.004"/>
-  <testcase name="checkMessageHashesInLoop" classname="MessageTest" time="0.005"/>
-  <testcase name="checkMessageHashTestCase1" classname="MessageTest" time="0.005"/>
-  <testcase name="checkMessageIDCreated" classname="MessageTest" time="0.002"/>
+  <testcase name="checkMessageIDTooLong" classname="MessageTest" time="0.002"/>
+  <testcase name="checkRecipientCellFailure" classname="MessageTest" time="0.003"/>
+  <testcase name="checkDisregardMessage" classname="MessageTest" time="0.004"/>
+  <testcase name="checkPrintMessages" classname="MessageTest" time="0.002"/>
+  <testcase name="checkMessageHashesInLoop" classname="MessageTest" time="0.003"/>
+  <testcase name="checkMessageHashTestCase1" classname="MessageTest" time="0.007"/>
+  <testcase name="checkMessageIDCreated" classname="MessageTest" time="0.003"/>
 </testsuite>
