@@ -241,7 +241,7 @@ public class BaneleTPart1 {
 
             } else if (menuOption == 2) {
                 System.out.println();
-                System.out.println("Coming Soon.");
+               displaySentMessages(sentList);
 
             } else if (menuOption == 3) {
                 System.out.println();
@@ -283,4 +283,28 @@ public class BaneleTPart1 {
 
         return Integer.parseInt(line);
     }
+    
+    
+    // Part 3 - Display all recently sent messages
+    public static void displaySentMessages(ArrayList<Message> sentMessages) {
+
+        System.out.println();
+        System.out.println("---------- RECENTLY SENT MESSAGES ----------");
+
+        if (sentMessages.isEmpty()) {
+            System.out.println("No messages have been sent yet.");
+        } else {
+            for (int i = 0; i < sentMessages.size(); i++) {
+
+                System.out.println();
+                System.out.println("MESSAGE " + (i + 1));
+                System.out.println();
+
+                sentMessages.get(i).DisplayMesage();
+            }
+        }
+
+        System.out.println("--------------------------------------------");
+    }
+
 }
