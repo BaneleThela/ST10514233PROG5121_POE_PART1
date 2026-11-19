@@ -169,16 +169,25 @@ public class MessageTest {
         assertEquals(1, messageObj1.returnTotalMessages(sentMessages));
     }
 
-    @Test
+   @Test
     public void checkPrintMessages() {
         ArrayList<Message> sentMessages = new ArrayList<>();
-        Message messageObj1 = new Message(testID, 0, recipient1,sender1, message1);
+
+        Message messageObj1 = new Message(
+                testID,
+                0,
+                "Nosipho",
+                sender1,
+                message1
+        );
+
         sentMessages.add(messageObj1);
 
         String expected = "Message ID: 0012345678"
                 + "\nMessage Hash: 00:0:HITONIGHT"
-                + "\nRecipient: +27718693002"
+                + "\nRecipient: Nosipho"
                 + "\nMessage: Hi Mike, can you join us for dinner tonight?\n\n";
+
         String actual = messageObj1.printMessages(sentMessages);
 
         assertEquals(expected, actual);
